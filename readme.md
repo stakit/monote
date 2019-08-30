@@ -18,7 +18,7 @@ npm i monote
 ```
 
 ## Usage
-Export your kit without calling `output()` and let monote handle the rest.
+Export your kit without calling `output()` and let monote handle the rest. Just change your application or your Stakit build chain and monote will automatically rebuild the site using the new version.
 
 ```javascript
 // build.js
