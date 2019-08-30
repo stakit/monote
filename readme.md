@@ -3,7 +3,7 @@
 
 WIP
 
-Work on static websites using [Stakit](https://github.com/stakit/stakit) without rebuilding them.
+Work on static websites using [Stakit](https://github.com/stakit/stakit) without constantly regenerating them. Monote keeps the outputted files in memory, serves and automatically rebuilds them, so you can work and preview the site faster.
 
 <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
   <img src="https://img.shields.io/badge/stability-experimental-orange.svg?style=flat-square" alt="Stability"/>
