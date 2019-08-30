@@ -1,6 +1,6 @@
 {
   "name": "monote",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Small development server for Stakit",
   "main": "index.js",
   "bin": "bin.js",
