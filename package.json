@@ -1,0 +1,34 @@
+{
+  "name": "monote",
+  "version": "0.0.0",
+  "description": "Small development server for Stakit",
+  "main": "index.js",
+  "bin": "bin.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/stakit/monote"
+  },
+  "keywords": [
+    "stakit"
+  ],
+  "author": "kodedninja",
+  "license": "ISC",
+  "devDependencies": {
+    "choo": "^7.0.0",
+    "stakit": "^0.0.3",
+    "stakit-choo": "^0.1.1",
+    "standard": "^14.1.0"
+  },
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "concat-stream": "^2.0.0",
+    "dedent": "^0.7.0",
+    "hot-module-replacement": "^3.0.3",
+    "merry": "^5.5.2",
+    "minimist": "^1.2.0",
+    "pump": "^3.0.0"
+  }
+}
