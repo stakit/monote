@@ -1,4 +1,4 @@
-// This weird way to intialize and use this module
+// this weird way to intialize and use this module
 require('hot-module-replacement')({
   ignore: /node_modules/
 })
@@ -8,11 +8,18 @@ var merry = require('merry')
 var path = require('path')
 var chalk = require('chalk')
 var pump = require('pump')
+var assert = require('assert')
 
 var logger = require('./lib/logger')
 
-module.exports = function (entryPath, opts) {
-  entryPath = resolve(entryPath)
+module.exports = function (entryPath, rawOpts) {
+  assert(typeof entryPath === 'string', 'monote: entryPath must be a string')
+
+  var opts = {
+    port: 8080,
+    logLevel: 'info'
+  }
+  Object.assign(opts, rawOpts)
 
   var log = logger({
     logLevel: opts.logLevel
@@ -76,8 +83,4 @@ module.exports = function (entryPath, opts) {
   console.log(`\n${chalk.bold.gray('monote')}\n`)
 
   server.listen(opts.port)
-}
-
-function resolve (str) {
-  return path.isAbsolute(str) ? str : path.resolve(str)
 }

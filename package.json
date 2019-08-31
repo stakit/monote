@@ -18,7 +18,6 @@
   "license": "ISC",
   "devDependencies": {
     "choo": "^7.0.0",
-    "stakit": "^0.0.3",
     "stakit-choo": "^0.1.1",
     "standard": "^14.1.0"
   },
@@ -31,6 +30,7 @@
     "merry": "^5.5.2",
     "minimist": "^1.2.0",
     "pino": "^5.13.2",
-    "pump": "^3.0.0"
+    "pump": "^3.0.0",
+    "stakit": "^0.0.3"
   }
 }
