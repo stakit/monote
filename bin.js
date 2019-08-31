@@ -42,5 +42,6 @@ if (argv.version) {
 }
 
 monote(argv._[0], {
-  port: argv.port
+  port: argv.port,
+  logLevel: 'info'
 })

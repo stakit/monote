@@ -9,8 +9,14 @@ var path = require('path')
 var chalk = require('chalk')
 var pump = require('pump')
 
+var logger = require('./lib/logger')
+
 module.exports = function (entryPath, opts) {
   entryPath = resolve(entryPath)
+
+  var log = logger({
+    logLevel: opts.logLevel
+  })
 
   var files = new Map()
   var kit = null
@@ -19,7 +25,9 @@ module.exports = function (entryPath, opts) {
   var writer = {
     write: function (file) {
       pump(file.stream, concat({ encoding: 'string' }, saveData), function (err) {
-        if (err) throw err
+        if (err) {
+          log.error(err)
+        }
       })
 
       function saveData (data) {
@@ -43,12 +51,15 @@ module.exports = function (entryPath, opts) {
   filesToWatch.push(entryPath)
 
   module.hot.accept(filesToWatch, function () {
-    console.log(chalk.magenta('(rebuild)'))
+    log.info({ message: '(rebuild)' })
     onUpdate()
   })
 
-  // start server
-  var server = merry({ logLevel: 'warn' })
+  // server
+  var server = merry({
+    logLevel: opts.logLevel,
+    logStream: log.stream
+  })
 
   // catch all route
   server.route('GET', '*', function (req, res, ctx) {
@@ -63,7 +74,6 @@ module.exports = function (entryPath, opts) {
   })
 
   console.log(`\n${chalk.bold.gray('monote')}\n`)
-  console.log(`development server is running on port ${chalk.bold.yellow(opts.port)}...`)
 
   server.listen(opts.port)
 }
