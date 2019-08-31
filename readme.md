@@ -1,8 +1,6 @@
 # monote
 **Small development server for Stakit**
 
-WIP
-
 Work on static websites using [Stakit](https://github.com/stakit/stakit) without constantly regenerating them. Monote keeps the outputted files in memory, serves and automatically rebuilds them, so you can work and preview the site faster.
 
 <a href="https://nodejs.org/api/documentation.html#documentation_stability_index">
@@ -28,20 +26,26 @@ var kit = stakit()
   .routes(() => ['/'])
   .render((route, state) => `${route}`)
 
-if (module.parent) module.exports = kit
-else kit.output()
+module.exports = kit
 ```
 
-Then run:
+To start the development server run:
 ```
 $ monote build.js
 ```
+
+To build the site, simply pass an `output` path as an argument:
+```
+$ monote -o ./public build.js
+```
+This is useful if you don't want to check whether the build file was required or called directly.
 
 ## CLI
 ```
 usage
   monote [opts] <entry>
 options
+  --output, -o            build the site to the specified path
   --help, -h              show this help text
   --port, -p              server port
   --version, -v           print version
@@ -51,4 +55,7 @@ examples
 
   start server on port 3000
   monote build.js -p 3000
+
+  build site without dev server
+  monote -o ./public build.js
 ```
