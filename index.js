@@ -3,14 +3,13 @@ require('hot-module-replacement')({
   ignore: /node_modules/
 })
 
-var concat = require('concat-stream')
-var merry = require('merry')
 var path = require('path')
 var chalk = require('chalk')
-var pump = require('pump')
 var assert = require('assert')
 
 var logger = require('./lib/logger')
+var startServer = require('./lib/server')
+var getWriter = require('./lib/writer')
 
 module.exports = function (entryPath, rawOpts) {
   assert(typeof entryPath === 'string', 'monote: entryPath must be a string')
@@ -25,26 +24,13 @@ module.exports = function (entryPath, rawOpts) {
     logLevel: opts.logLevel
   })
 
-  var files = new Map()
+  var writer = getWriter()
+
+  // the current stakit chain
   var kit = null
 
-  // simple writer that saves the concatinated result into a Map
-  var writer = {
-    write: function (file) {
-      pump(file.stream, concat({ encoding: 'string' }, saveData), function (err) {
-        if (err) {
-          log.error(err)
-        }
-      })
-
-      function saveData (data) {
-        files.set(file.destination, data)
-      }
-    }
-  }
-
   function onUpdate () {
-    files.clear()
+    writer.clear()
     kit = require(entryPath)
     kit.output(writer)
   }
@@ -62,25 +48,5 @@ module.exports = function (entryPath, rawOpts) {
     onUpdate()
   })
 
-  // server
-  var server = merry({
-    logLevel: opts.logLevel,
-    logStream: log.stream
-  })
-
-  // catch all route
-  server.route('GET', '*', function (req, res, ctx) {
-    var filePath = path.extname(req.url) ? req.url : path.join(req.url, 'index.html')
-    var file = files.get(filePath)
-
-    if (file) {
-      ctx.send(200, file)
-    } else {
-      ctx.send(404, 'Not Found')
-    }
-  })
-
-  console.log(`\n${chalk.bold.gray('monote')}\n`)
-
-  server.listen(opts.port)
+  startServer(opts.port, writer, log)
 }

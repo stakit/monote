@@ -12,5 +12,4 @@ var kit = stakit()
   .render(render(app))
   .transform(includeStyle, '/style.css')
 
-if (module.parent) module.exports = kit
-else kit.output()
+module.exports = kit
