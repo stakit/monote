@@ -40,6 +40,9 @@ $ monote -o ./public build.js
 ```
 This is useful if you don't want to check whether the build file was required or called directly.
 
+### `context._files` and `context._watch`
+Monote will automatically watch all files from `context._files` that have a `source`. It will also watch all files in `context._watch`, which is a simple, flat array of paths.
+
 ## CLI
 ```
 usage
