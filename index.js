@@ -4,6 +4,7 @@ require('hot-module-replacement')({
 })
 
 var assert = require('assert')
+var { watch } = require('chokidar')
 
 var logger = require('./lib/logger')
 var getServer = require('./lib/server')
@@ -40,18 +41,30 @@ module.exports = function (entryPath, rawOpts) {
         resolve(server)
       })
     }
+
+    function handleChange () {
+      log.info({ message: '(rebuild)' })
+      onUpdate()
+    }
+
     onUpdate()
 
-    // HMR files to watch
+    // static files to watch
     var filesToWatch = kit._context._files
       .filter(file => !!file.source)
       .map(file => file.source)
 
-    filesToWatch.push(entryPath)
+    // append watched files that trigger the rebuild
+    if (Array.isArray(kit._context._watch)) {
+      filesToWatch = filesToWatch.concat(kit._context._watch)
+    }
 
-    module.hot.accept(filesToWatch, function () {
-      log.info({ message: '(rebuild)' })
-      onUpdate()
-    })
+    watch(filesToWatch, {})
+      .on('change', handleChange)
+      .on('unlink', handleChange)
+
+    module.hot.accept(entryPath, handleChange)
+
+    return server
   })
 }
