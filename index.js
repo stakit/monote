@@ -59,7 +59,13 @@ module.exports = function (entryPath, rawOpts) {
       filesToWatch = filesToWatch.concat(kit._context._watch)
     }
 
-    watch(filesToWatch, {})
+    // we set the max listeners, because there could be many many files.
+    process.setMaxListeners(0)
+    // we manually use only these events to avoid a lots of small updates. might change this in the future.
+    watch(filesToWatch, {
+      ignoreInitial: true
+    })
+      .on('add', handleChange)
       .on('change', handleChange)
       .on('unlink', handleChange)
 
