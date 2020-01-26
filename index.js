@@ -5,6 +5,7 @@ require('hot-module-replacement')({
 
 var assert = require('assert')
 var { watch } = require('chokidar')
+var clearModule = require('clear-module')
 
 var logger = require('./lib/logger')
 var getServer = require('./lib/server')
@@ -47,6 +48,12 @@ module.exports = function (entryPath, rawOpts) {
       onUpdate()
     }
 
+    // when an asset was changed we must manually clear the module cache
+    function handleAssetChange () {
+      clearModule.all()
+      handleChange()
+    }
+
     onUpdate()
 
     // static files to watch
@@ -65,9 +72,9 @@ module.exports = function (entryPath, rawOpts) {
     watch(filesToWatch, {
       ignoreInitial: true
     })
-      .on('add', handleChange)
-      .on('change', handleChange)
-      .on('unlink', handleChange)
+      .on('add', handleAssetChange)
+      .on('change', handleAssetChange)
+      .on('unlink', handleAssetChange)
 
     module.hot.accept(entryPath, handleChange)
 

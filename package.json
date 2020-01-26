@@ -29,6 +29,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "chokidar": "^3.2.1",
+    "clear-module": "^4.0.0",
     "concat-stream": "^2.0.0",
     "dedent": "^0.7.0",
     "garnish": "^5.2.0",
