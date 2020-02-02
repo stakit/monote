@@ -34,13 +34,10 @@ module.exports = function (entryPath, rawOpts) {
     var writer = getWriter()
     var server = getServer(writer, log).listen(opts.port)
 
-    function onUpdate () {
-      writer.clear()
-      kit = require(entryPath)
-      kit.output(writer).then(function () {
-        // resolve after the first build was finished
-        resolve(server)
-      })
+    // when an asset was changed we must manually clear the module cache
+    function handleAssetChange () {
+      clearModule.all()
+      handleChange()
     }
 
     function handleChange () {
@@ -48,10 +45,13 @@ module.exports = function (entryPath, rawOpts) {
       onUpdate()
     }
 
-    // when an asset was changed we must manually clear the module cache
-    function handleAssetChange () {
-      clearModule.all()
-      handleChange()
+    function onUpdate () {
+      writer.clear()
+      kit = require(entryPath)
+      kit.output(writer).then(function () {
+        // resolve after the first build was finished
+        resolve(server)
+      })
     }
 
     onUpdate()
@@ -76,8 +76,9 @@ module.exports = function (entryPath, rawOpts) {
       .on('change', handleAssetChange)
       .on('unlink', handleAssetChange)
 
-    module.hot.accept(entryPath, handleChange)
-
+    if (module.hot) {
+      module.hot.accept(entryPath, handleChange)
+    }
     return server
   })
 }
