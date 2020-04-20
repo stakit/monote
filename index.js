@@ -76,7 +76,7 @@ module.exports = function (entryPath, rawOpts) {
       .on('change', handleAssetChange)
       .on('unlink', handleAssetChange)
 
-    if (module.hot) {
+    if (module && module.hot) {
       module.hot.accept(entryPath, handleChange)
     }
     return server
